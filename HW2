@@ -1,0 +1,63 @@
+# 1. Используя операторы языка SQL, создайте таблицу “sales”. Заполните ее данными. Справа располагается рисунок к первому заданию.
+CREATE TABLE hw_2.sales2
+(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	order_date DATE NOT NULL,
+	bucket INT NOT NULL
+);
+
+INSERT INTO hw_2.sales2 (order_date, bucket)
+VALUES
+("2021-01-01", 160),
+("2021-01-02", 150),
+("2021-01-03", 90),
+("2021-01-04", 150),
+("2021-01-05", 320);
+
+# 2. Разделите  значения поля “bucket” на 3 сегмента: меньше 100(“Маленький заказ”), 100-300(“Средний заказ”) и больше 300 (“Большой заказ”)
+
+SELECT *,
+	CASE
+		WHEN bucket < 100
+			THEN "Маленький заказ"
+		WHEN bucket BETWEEN 100 AND 300
+			THEN "Средний заказ"
+		WHEN bucket > 300
+			THEN "Большой заказ"
+	END AS orders
+FROM hw_2.sales2
+ORDER BY bucket ASC;
+
+# 3. Создайте таблицу “orders”, заполните ее значениями. Покажите “полный” статус заказа, используя оператор CASE
+
+use hw_2;
+CREATE TABLE orders
+(
+	orderid INT PRIMARY KEY AUTO_INCREMENT,
+	employeeid VARCHAR(5) NOT NULL,
+	amount DECIMAL(7, 2),
+	orderstatus VARCHAR(10)
+);
+
+INSERT INTO orders (employeeid, amount, orderstatus)
+VALUES
+("e03", 15.00, "OPEN"),
+("e01", 25.50, "OPEN"),
+("e05", 100.70, "CLOSED"),
+("e02", 22.18, "OPEN"),
+("e04", 9.50, "CANCELLED"),
+("e04", 99.99, "OPEN");
+
+SELECT * FROM orders;
+
+SELECT
+	orderid, orderstatus,
+	CASE
+		WHEN orderstatus = "OPEN"
+			THEN "Order is in open state."
+		WHEN orderstatus = "CLOSED"
+			THEN "Order is closed."
+		WHEN orderstatus = "CANCELLED"
+			THEN "Order is cancelled."
+	END AS order_summary
+FROM orders;
